@@ -38,7 +38,7 @@ def get_libraries(install_profile, archive, root):
                 # local file inside the archive
                 # does not use ZipFile.extract because the path is
                 # structurally different
-                entry_path = os.path.join('maven', artifact['path'])
+                entry_path = 'maven/' + artifact['path']
                 print('Extract', entry_path)
                 with archive.open(entry_path) as entry:
                     with open(path, 'wb') as f:

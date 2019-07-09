@@ -9,7 +9,7 @@ def run_procs(procs):
         args = [
             'java',
             '-cp',
-            ':'.join([proc['jar'], *proc['classpath']]),
+            ';'.join([proc['jar'], *proc['classpath']]),
             main_class,
             *proc['args']
         ]
