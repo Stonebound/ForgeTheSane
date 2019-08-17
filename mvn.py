@@ -1,6 +1,7 @@
 import urllib.request as req
 import os.path
 import re
+from shutil import copyfile
 
 
 mvn_pattern = re.compile(
@@ -14,26 +15,35 @@ mvn_pattern = re.compile(
         \]
     """, re.X)
 
-def get_libraries(install_profile, archive, root):
+def get_libraries(install_profile, archive, root, cache):
     """Downloads or extracts libraries specified in the install profile to the
     location given by `root`.
 
     Return - a dict of { <library-name>: <path-to-library> }.
     """
+    
     libs_prof = install_profile['libraries']
     libs = {}
     for lib_prof in libs_prof:
         artifact = lib_prof['downloads']['artifact']
         path = os.path.join(root, artifact['path'])
+        cachepath = os.path.join(cache, artifact['path'])
         libs[lib_prof['name']] = path
         url = artifact['url']
         os.makedirs(os.path.dirname(path), exist_ok=True)
+        os.makedirs(os.path.dirname(cachepath), exist_ok=True)
         if not os.path.exists(path):
             if url:
-                print('Download', url)
-                with open(path, 'wb') as f:
-                    with req.urlopen(url) as data:
-                        f.write(data.read())
+                if os.path.isfile(cachepath):
+                    print('Found Lib in Cache, copying..', url)
+                    copyfile(cachepath, path)
+                else:
+                    print('Download..', url)
+                    with open(cachepath, 'wb') as f:
+                        with req.urlopen(url) as data:
+                            f.write(data.read())
+                            f.close()
+                            copyfile(cachepath, path)
             else:
                 # local file inside the archive
                 # does not use ZipFile.extract because the path is

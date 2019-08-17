@@ -5,14 +5,24 @@ import json
 import os.path
 from zipfile import ZipFile
 
-
+forgeversionname = ''
+mcpversionname = ''
+mcversion = ''
+ 
 def data_setup(installer_jar):
     with ZipFile(installer_jar, 'r') as forge_archive:
         install_profile = get_install_profile(forge_archive)
         base = os.path.join('data', install_profile['version'])
+        global mcversion
+        mcversion = install_profile['minecraft']
+        global forgeversionname
+        forgeversionname = install_profile['version']
+        global mcpversionname
+        mcpversionname = install_profile['data']['MCP_VERSION']['client']
+        cache = os.path.join('cache')
         os.makedirs(base, exist_ok=True)
         mcpath = mcdl.download_minecraft(install_profile, base)
-        libs = mvn.get_libraries(install_profile, forge_archive, base)
+        libs = mvn.get_libraries(install_profile, forge_archive, base, cache)
         data = mvn.get_data(install_profile, forge_archive, base)
         data['MINECRAFT_JAR'] = mcpath
         # put output jar in the base directory, so we don't need to
