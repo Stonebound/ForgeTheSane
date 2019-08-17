@@ -19,19 +19,19 @@ def make_instance(installer_jar):
     # TODO: cleanup this mess
     if not os.path.exists(base):
         libs = os.path.join(base, 'libraries')
-        instance = os.path.join(base, 'instances\\'+forgeversionname)
+        instance = os.path.join(base, 'instances', forgeversionname)
         
         os.makedirs(instance, exist_ok=True)
         os.makedirs(libs, exist_ok=True)
         
-        mcclientfolder = 'net\\minecraft\\client\\'
+        mcclientfolder = os.path.join('net', 'minecraft', 'client')
         copytree(os.path.join(data, mcclientfolder), os.path.join(libs, mcclientfolder))
         
-        forgefolder = 'net\\minecraftforge\\forge\\'
+        forgefolder = os.path.join('net', 'minecraftforge', 'forge')
         copytree(os.path.join(data, forgefolder), os.path.join(libs, forgefolder))
         
         clientjar = 'forge-'+shortfversion+'-client.jar'
-        copyfile(os.path.join(data, clientjar), os.path.join(libs, forgefolder+shortfversion+'\\'+clientjar ))
+        copyfile(os.path.join(data, clientjar), os.path.join(libs, forgefolder, shortfversion, clientjar ))
         
         instancecfg = open(os.path.join(instance, "instance.cfg"), "w") 
         instancecfg.write("name=Forge "+mcversion+' '+fversionsplit[2]+'\nInstanceType=OneSix')
