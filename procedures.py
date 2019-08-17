@@ -1,15 +1,31 @@
 import subprocess
 from zipfile import ZipFile
+from sys import platform as _platform
 
 
 def run_procs(procs):
     """Runs the given processes using the JVM."""
     for proc in procs:
         main_class = get_main_class(proc['jar'])
+        
+        from sys import platform as _platform
+
+        # yep..
+        separator = ";"
+        if _platform.startswith('linux'):
+           # linux
+           separator = ":"
+        elif _platform == "darwin":
+           # MAC OS X
+           separator = ":"
+        elif _platform.startswith('win'):
+           # Windows
+           separator = ";"
+
         args = [
             'java',
             '-cp',
-            ';'.join([proc['jar'], *proc['classpath']]),
+            separator.join([proc['jar'], *proc['classpath']]),
             main_class,
             *proc['args']
         ]
