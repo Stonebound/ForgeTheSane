@@ -16,7 +16,7 @@ def main():
                       },
                       required=True,
                       widget='FileChooser')
-    options = parser.add_argument_group('test')  
+    options = parser.add_argument_group('Options')  
     options.add_argument('--force',
                       metavar='Force Redownload & Recreation',
                       help='Will force the redownload of all libraries and recreation of the instance',
