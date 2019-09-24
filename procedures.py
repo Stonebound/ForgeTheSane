@@ -29,14 +29,14 @@ def run_procs(procs):
             main_class,
             *proc['args']
         ]
-        print('Run', proc['jar'])
+        print('Running', proc['jar'], flush=True)
         complete = subprocess.run(
             args,
             encoding='UTF-8',
             stdout=subprocess.DEVNULL
         )
         if complete.returncode != 0:
-            print('Process completed with exit code', complete.returncode)
+            print('Process completed with exit code', complete.returncode, flush=True)
 
 def get_main_class(jar_name):
     """Inspects the manifest file and retrieves the main class name."""

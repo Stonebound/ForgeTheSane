@@ -1,6 +1,7 @@
 import urllib.request as req
 import os.path
 import re
+import __main__
 from shutil import copyfile
 
 
@@ -32,13 +33,13 @@ def get_libraries(install_profile, archive, root, cache):
         url = artifact['url']
         os.makedirs(os.path.dirname(path), exist_ok=True)
         os.makedirs(os.path.dirname(cachepath), exist_ok=True)
-        if not os.path.exists(path):
+        if not os.path.exists(path) or __main__.force:
             if url:
-                if os.path.isfile(cachepath):
-                    print('Found Lib in Cache, copying..', url)
+                if os.path.isfile(cachepath) and not __main__.force:
+                    print('Found Lib in Cache, copying..', url, flush=True)
                     copyfile(cachepath, path)
                 else:
-                    print('Download..', url)
+                    print('Downloading', url, flush=True)
                     with open(cachepath, 'wb') as f:
                         with req.urlopen(url) as data:
                             f.write(data.read())
@@ -49,7 +50,7 @@ def get_libraries(install_profile, archive, root, cache):
                 # does not use ZipFile.extract because the path is
                 # structurally different
                 entry_path = 'maven/' + artifact['path']
-                print('Extract', entry_path)
+                print('Extracting', entry_path, flush=True)
                 with archive.open(entry_path) as entry:
                     with open(path, 'wb') as f:
                         f.write(entry.read())
@@ -80,7 +81,7 @@ def get_data(install_profile, archive, root):
             data[datum_name] = os.path.join(root, path_spec[1:])
             os.makedirs(os.path.dirname(data[datum_name]), exist_ok=True)
             if not os.path.exists(data[datum_name]):
-                print('Extract', path_spec[1:])
+                print('Extracting', path_spec[1:], flush=True)
                 with archive.open(path_spec[1:]) as entry:
                     with open(data[datum_name], 'wb') as f:
                         f.write(entry.read())

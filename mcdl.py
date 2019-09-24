@@ -17,7 +17,7 @@ def download_minecraft(install_profile, base):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     url = minecraft_download_url(install_profile)
     if not os.path.exists(path):
-        print('Download', url)
+        print('Downloading', url, flush=True)
         with open(path, 'wb') as f:
             with req.urlopen(url) as data:
                 f.write(data.read())

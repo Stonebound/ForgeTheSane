@@ -1,11 +1,12 @@
 import data_setup
 import os
 import json
-from shutil import copyfile, copytree
+import __main__
+from shutil import copyfile, copytree, rmtree
 from zipfile import ZipFile
 
 def make_instance(installer_jar):
-    print('Making instance for ' + data_setup.forgeversionname)
+    print('Making instance for', data_setup.forgeversionname, flush=True)
     
     forgeversionname = data_setup.forgeversionname
     fversionsplit = forgeversionname.split('-')
@@ -17,7 +18,10 @@ def make_instance(installer_jar):
     data = os.path.join('data', forgeversionname)
     
     # TODO: cleanup this mess
-    if not os.path.exists(base):
+    if not os.path.exists(base) or __main__.force:
+        if os.path.exists(base) and __main__.force:
+            rmtree(base)
+
         libs = os.path.join(base, 'libraries')
         instance = os.path.join(base, 'instances', forgeversionname)
         
@@ -73,5 +77,5 @@ def make_instance(installer_jar):
             json.dump(data, patchesFile, indent=4)
             
     else:
-        print("instance already exists!")
+        print("Instance already exists!", flush=True)
     

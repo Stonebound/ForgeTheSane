@@ -4,6 +4,7 @@ import mcdl
 import json
 import os.path
 import sys
+import __main__
 from zipfile import ZipFile
 
 forgeversionname = ''
@@ -18,8 +19,8 @@ def data_setup(installer_jar):
         mcversion = install_profile['minecraft']
         global forgeversionname
         forgeversionname = install_profile['version']
-        if os.path.exists(os.path.join('instances', forgeversionname)):
-            print("Instance already exists!")
+        if os.path.exists(os.path.join('instances', forgeversionname)) and not __main__.force:
+            print("Instance already exists!", flush=True)
             sys.exit()
         global mcpversionname
         mcpversionname = install_profile['data']['MCP_VERSION']['client']
